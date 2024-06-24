@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "897447709546",
+    "project_id": "techjam-26dca",
+    "storage_bucket": "techjam-26dca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:897447709546:android:1dc1648c84e04639547313",
+        "android_client_info": {
+          "package_name": "com.example.techjam"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVwsuePWg4ZpJBL2j_VgvU1_iaEaGui0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
