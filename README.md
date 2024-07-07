@@ -1,4 +1,4 @@
-# Caption Maker
+# CaptionMasterAI
 
 ## Problem Statement
 
