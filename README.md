@@ -18,14 +18,14 @@ Develop an Android mobile app that helps TikTok users generate engaging captions
 ### Page 2: Media Gallery
 - **Display Media**: Show thumbnails for the user's videos and pictures.
 - **Media Interaction**:
-  - **Download Media**: On clicking a thumbnail, download the media to local storage.
+  - **Download Media**: On clicking a thumbnail, upload the media to local storage.
   - **Upload Media**: Option to upload a new video (for demo purposes).
 - **Navigation**: On selecting media, navigate to the media editor page.
 
 ### Page 3: Media Editor
 - **Media Display**: Show the selected video.
 - **Caption Generation**:
-  - **Input Fields**: Enter description, mood, and desired caption length.
+  - **Input Fields**: Enter description.
   - **Generate Caption**: Use Google Gemini LLM to generate a caption.
   - **Optional**: Provide reasoning and statistics for the chosen hashtags.
 - **Navigation**: 
