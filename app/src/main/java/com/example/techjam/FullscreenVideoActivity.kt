@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +20,7 @@ class FullscreenVideoActivity : AppCompatActivity() {
     private lateinit var descriptionInput: EditText
     private lateinit var generateCaptionsButton: Button
     private lateinit var hashtagTextView: TextView
+    private lateinit var moodSpinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,10 +32,18 @@ class FullscreenVideoActivity : AppCompatActivity() {
         descriptionInput = findViewById(R.id.description_input)
         generateCaptionsButton = findViewById(R.id.generate_captions_button)
         hashtagTextView = findViewById(R.id.hashtag_text_view)
+        moodSpinner = findViewById(R.id.mood_spinner)
+
         val generativeModel = GenerativeModel(
             modelName = "gemini-1.5-flash",
             apiKey = BuildConfig.apiKey
         )
+
+        // Setup mood spinner
+        val moods = listOf("Happy", "Sad", "Excited", "Calm", "Angry")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, moods)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        moodSpinner.adapter = adapter
 
         // Get the video URI from the intent
         val videoUri = intent.getStringExtra("videoUri")?.let { Uri.parse(it) }
@@ -60,13 +68,14 @@ class FullscreenVideoActivity : AppCompatActivity() {
         // Set up the generate captions button
         generateCaptionsButton.setOnClickListener {
             val description = descriptionInput.text.toString()
+            val selectedMood = moodSpinner.selectedItem.toString()
             if (description.isNotBlank() && videoUri != null) {
                 lifecycleScope.launch {
                     val keyFrames = extractKeyFrames(videoUri)
                     if (keyFrames.isNotEmpty()) {
-                        val prompt = "Generate a caption for the following video description: $description"
+                        val prompt = "Generate a caption for the following video description with a $selectedMood mood: $description"
 
-                        val caption = generateContentWithFrames(generativeModel, prompt, keyFrames)
+                        val caption = generateContentWithFrames(generativeModel, prompt, selectedMood, keyFrames)
 
                         // Display all captions or the first one, as per your requirement
                         if (caption.isNotEmpty()) {
@@ -75,7 +84,7 @@ class FullscreenVideoActivity : AppCompatActivity() {
                             Toast.makeText(this@FullscreenVideoActivity, "Failed to generate captions", Toast.LENGTH_SHORT).show()
                         }
 
-                        val hashtagPrompt = "Generate 1 hashtag for the following video description: $description"
+                        val hashtagPrompt = "Generate a single hashtag for the following video description with a $selectedMood mood: $description"
                         val hashtag = generateHashtag(generativeModel, hashtagPrompt)
                         displayHashtag(hashtag)
                     } else {
@@ -88,7 +97,7 @@ class FullscreenVideoActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun generateContentWithFrames(model: GenerativeModel, prompt: String, bitmap: List<Bitmap>): String {
+    private suspend fun generateContentWithFrames(model: GenerativeModel, prompt: String, mood: String, bitmap: List<Bitmap>): String {
         return withContext(Dispatchers.IO) {
             val response = model.generateContent(
                 com.google.ai.client.generativeai.type.content {
@@ -102,7 +111,7 @@ class FullscreenVideoActivity : AppCompatActivity() {
                     image(bitmap[7])
                     image(bitmap[8])
                     image(bitmap[9])
-                    text(prompt)
+                    text("$prompt with a $mood mood")
                 }
             )
             response.text.toString()
@@ -116,7 +125,8 @@ class FullscreenVideoActivity : AppCompatActivity() {
                     text(prompt)
                 }
             )
-            response.text.toString()
+            // Assuming the response contains a list of hashtags, we'll extract the first one
+            response.text?.split(" ")?.firstOrNull() ?: ""
         }
     }
 
