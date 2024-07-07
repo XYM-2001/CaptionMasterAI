@@ -25,8 +25,8 @@ Develop an Android mobile app that helps TikTok users generate engaging captions
 ### Page 3: Media Editor
 - **Media Display**: Show the selected video.
 - **Caption Generation**:
-  - **Input Fields**: Enter description.
-  - **Generate Caption**: Use Google Gemini LLM to generate a caption.
+  - **Input Fields**: Enter description, select moods for the hashtag and caption.
+  - **Generate Caption**: Use Google Gemini LLM to generate a caption and a hashtag for TikTok posting.
   - **Optional**: Provide reasoning and statistics for the chosen hashtags.
 - **Navigation**: 
   - **Post Media**: Upload the media with the generated caption, then navigate to the upload page.
