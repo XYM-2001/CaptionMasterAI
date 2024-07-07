@@ -5,31 +5,38 @@
     android:background="#000000">
 
     <!-- Top Half -->
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/top_half_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_alignParentTop="true"
         android:layout_above="@id/bottom_half_layout">
 
         <VideoView
             android:id="@+id/video_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:layout_marginBottom="16dp" />
 
-        <ImageButton
-            android:id="@+id/btn_back"
+        <TextView
+            android:id="@+id/hashtag_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:background="@android:color/transparent"
-            android:padding="16dp"
-            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+            android:textSize="16sp"
+            android:textColor="#80FFFFFF"
+        android:background="@android:color/transparent" />
+    </FrameLayout>
 
-    </LinearLayout>
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@android:color/transparent"
+        android:padding="16dp"
+        android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
     <!-- Bottom Half -->
     <LinearLayout

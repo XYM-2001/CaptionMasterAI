@@ -20,6 +20,7 @@ class FullscreenVideoActivity : AppCompatActivity() {
     private lateinit var captionsTextView: TextView
     private lateinit var descriptionInput: EditText
     private lateinit var generateCaptionsButton: Button
+    private lateinit var hashtagTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +31,7 @@ class FullscreenVideoActivity : AppCompatActivity() {
         captionsTextView = findViewById(R.id.captions_text_view)
         descriptionInput = findViewById(R.id.description_input)
         generateCaptionsButton = findViewById(R.id.generate_captions_button)
+        hashtagTextView = findViewById(R.id.hashtag_text_view)
         val generativeModel = GenerativeModel(
             modelName = "gemini-1.5-flash",
             apiKey = BuildConfig.apiKey
@@ -72,6 +74,10 @@ class FullscreenVideoActivity : AppCompatActivity() {
                         } else {
                             Toast.makeText(this@FullscreenVideoActivity, "Failed to generate captions", Toast.LENGTH_SHORT).show()
                         }
+
+                        val hashtagPrompt = "Generate 1 hashtag for the following video description: $description"
+                        val hashtag = generateHashtag(generativeModel, hashtagPrompt)
+                        displayHashtag(hashtag)
                     } else {
                         Toast.makeText(this@FullscreenVideoActivity, "No keyframes extracted", Toast.LENGTH_SHORT).show()
                     }
@@ -80,7 +86,6 @@ class FullscreenVideoActivity : AppCompatActivity() {
                 Toast.makeText(this@FullscreenVideoActivity, "Please enter a description of the video", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 
     private suspend fun generateContentWithFrames(model: GenerativeModel, prompt: String, bitmap: List<Bitmap>): String {
@@ -104,8 +109,23 @@ class FullscreenVideoActivity : AppCompatActivity() {
         }
     }
 
+    private suspend fun generateHashtag(model: GenerativeModel, prompt: String): String {
+        return withContext(Dispatchers.IO) {
+            val response = model.generateContent(
+                com.google.ai.client.generativeai.type.content {
+                    text(prompt)
+                }
+            )
+            response.text.toString()
+        }
+    }
+
     private fun displayCaptions(captions: String) {
         captionsTextView.text = captions
+    }
+
+    private fun displayHashtag(hashtag: String) {
+        hashtagTextView.text = hashtag
     }
 
     private suspend fun extractKeyFrames(videoUri: Uri): List<Bitmap> = withContext(Dispatchers.IO) {
@@ -126,5 +146,4 @@ class FullscreenVideoActivity : AppCompatActivity() {
         retriever.release()
         keyFrames
     }
-
 }
